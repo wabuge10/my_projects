@@ -1,137 +1,41 @@
-// from data.js
-var tableData = data;
+// Assign the data from data.js to descriptive variable
+var ufoData = data;
 
-// YOUR CODE HERE!
-/* -----------------------------------------------
-/* How to use? : Check the GitHub README
-/* ----------------------------------------------- */
+// get table references from the html page
+var tbody = d3.select("tbody");
 
-/* To load a config file (particles.json) you need to host this demo (MAMP/WAMP/local)... */
-/*
-particlesJS.load('particles-js', 'particles.json', function() {
-  console.log('particles.js loaded - callback');
-});
-*/
+// create a table with all data in it and clear out any existing data
+function ufotable(ufoData) {
+  tbody.html("");
 
-/* Otherwise just put the config content (json): */
+  // Loop through all the data and add them to the table appending rows and cells for each value
+ufoData.forEach((uforow) => {
+var tablerow = tbody.append("tr");
 
-particlesJS('particles-js',
-  
-  {
-    "particles": {
-      "number": {
-        "value": 50,
-        "density": {
-          "enable": true,
-          "value_area": 800
-        }
-      },
-      "color": {
-        "value": "#888"
-      },
-      "shape": {
-        "type": "circle",
-        "stroke": {
-          "width": 0,
-          "color": "#888"
-        },
-        "polygon": {
-          "nb_sides": 5
-        },
-        "image": {
-          "src": "img/github.svg",
-          "width": 100,
-          "height": 100
-        }
-      },
-      "opacity": {
-        "value": 0.8,
-        "random": false,
-        "anim": {
-          "enable": false,
-          "speed": 3,
-          "opacity_min": 0.1,
-          "sync": false
-        }
-      },
-      "size": {
-        "value": 5,
-        "random": true,
-        "anim": {
-          "enable": false,
-          "speed": 40,
-          "size_min": 0.1,
-          "sync": false
-        }
-      },
-      "line_linked": {
-        "enable": true,
-        "distance": 150,
-        "color": "#888",
-        "opacity": 0.4,
-        "width": 1
-      },
-      "move": {
-        "enable": true,
-        "speed": 6,
-        "direction": "none",
-        "random": false,
-        "straight": false,
-        "out_mode": "out",
-        "attract": {
-          "enable": false,
-          "rotateX": 600,
-          "rotateY": 1200
-        }
-      }
-    },
-    "interactivity": {
-      "detect_on": "canvas",
-      "events": {
-        "onhover": {
-          "enable": true,
-          "mode": "repulse"
-        },
-        "onclick": {
-          "enable": true,
-          "mode": "push"
-        },
-        "resize": true
-      },
-      "modes": {
-        "grab": {
-          "distance": 400,
-          "line_linked": {
-            "opacity": 1
-          }
-        },
-        "bubble": {
-          "distance": 400,
-          "size": 40,
-          "duration": 2,
-          "opacity": 8,
-          "speed": 3
-        },
-        "repulse": {
-          "distance": 200
-        },
-        "push": {
-          "particles_nb": 4
-        },
-        "remove": {
-          "particles_nb": 2
-        }
-      }
-    },
-    "retina_detect": true,
-    "config_demo": {
-      "hide_card": false,
-      "background_color": "#b61924",
-      "background_image": "",
-      "background_position": "50% 50%",
-      "background_repeat": "no-repeat",
-      "background_size": "cover"
-    }
+// Adding a row in the tbody for every record in the datafile
+Object.values(uforow).forEach((item) => {
+  var datacell = tablerow.append("td");
+    datacell.text(item);
   }
-
 );
+});
+}
+
+function handleClick() {
+  // using d3 to prevent a refresh 
+  d3.event.preventDefault();
+  // Grab the datetime value from the filter
+  var inputdate = d3.select("#datetime").property("value");
+
+  let datafiltered = ufoData;
+  // Filter the date using the if...
+  if (inputdate) {
+    datafiltered = datafiltered.filter(row => row.datetime === inputdate);
+  }
+// filtered table depending on the date selected
+  ufotable(datafiltered);
+}
+// Use the on-button to trigger an event upon any clicking 
+d3.selectAll("#filter-btn").on("click", handleClick);
+ 
+ufotable(ufoData);
